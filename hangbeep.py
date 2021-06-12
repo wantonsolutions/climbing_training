@@ -9,6 +9,13 @@ def speak(text_to_speech, block=True):
 	if block:
 		output, error = process.communicate()
 
+def timed_speak(text_to_speech):
+	start_talking = time.time()
+	speak(text_to_speech, block=True)
+	talking_duration = int(time.time() - start_talking)
+	return talking_duration
+
+
 def beep():
 	print('\a')
 
@@ -32,8 +39,8 @@ def count_down(duration):
 
 
 def individual_finger(finger, rest_interval, active_interval):
-	speak(finger + " finger")
-	count_down(rest_interval)
+	duration = timed_speak(finger + " finger")
+	count_down(rest_interval - duration)
 
 	speak("Start", block=False)
 	beep()
@@ -48,13 +55,13 @@ def exercise_fingers(fingers, active_interval,rest_interval):
 		individual_finger(finger,active_interval,rest_interval)
 
 def finger_workout():
-	sets=2
+	sets=5
 	set_rest=60
 	active_interval=5
 	rest_interval=5
 	fingers = ["pointer", "middle", "ring", "pinkey"]
 
-	preamble=True
+	preamble=False
 
 
 	if preamble:
@@ -65,7 +72,6 @@ def finger_workout():
 		speak("Rest between sets " + str(set_rest) + " seconds")
 
 		active_set_time = ((active_interval+rest_interval) * len(fingers))
-		print(active_set_time)
 		workout_time = (active_set_time * sets) + (set_rest * (sets-1))
 		workout_mins = int((workout_time / 60))
 		speak("Estemated workout time " + str(workout_mins) + " minutes")
@@ -84,8 +90,8 @@ def finger_workout():
 		exercise_fingers(fingers, active_interval, rest_interval)
 
 		if i < sets-1:
-			speak("Set " + str(i) + " out of " + str(sets) +" complete. Rest between sets " + str(set_rest) + "seconds")
-			count_down(set_rest)
+			duration = timed_speak("Set " + str(i) + " out of " + str(sets) +" complete. Rest between sets " + str(set_rest) + " seconds")
+			count_down(set_rest - duration)
 	
 	time.sleep(1)
 	speak("Finger board exercise complete")
