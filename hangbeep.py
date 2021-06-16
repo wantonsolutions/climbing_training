@@ -19,8 +19,6 @@ def timed_speak(text_to_speech):
 def beep():
 	print('\a')
 
-
-
 def count_down(duration):
 	#don't count right away
 	hold_first_n=2
@@ -41,10 +39,10 @@ def count_down(duration):
 		time.sleep(1)
 
 
-
-
 def individual_finger(finger, active_interval, rest_interval,):
-	duration = timed_speak(finger)
+
+	duration = timed_speak("Next Exercise: ")
+	duration += timed_speak(finger)
 	duration += timed_speak("Hold for " + str(active_interval) + "seconds")
 	count_down(rest_interval - duration)
 
@@ -75,12 +73,14 @@ def describe_workout(workout_name, fingers, sets, set_rest, active_interval, res
 
 
 def exercise_fingers(fingers, active_interval,rest_interval):
+	itt=0
 	for finger in fingers:
-		#this just prevents a rest from running on the first iteration
 		rest=rest_interval
-		if finger == fingers[0]:
+		#this just prevents a rest from running on the first iteration
+		if itt == 0:
 			rest=5
 		individual_finger(finger,active_interval,rest)
+		itt=itt+1
 
 
 def workout(workout_name,fingers,sets, set_rest, active_interval, rest_interval, preamble=True):
@@ -111,7 +111,7 @@ def warmup():
 	rest_interval=10
 	fingers=[ "All four fingers", "All four fingers", "First Two Fingers", "Last Two fingers"]
 	workout_name="warm up"
-	preamble=False
+	preamble=True
 	workout(workout_name,fingers,sets,set_rest,active_interval,rest_interval,preamble)
 
 
@@ -122,6 +122,7 @@ def mono_training():
 	rest_interval=5
 	fingers = ["pointer finger", "middle finger", "ring finger", "pinkey finger"]
 	workout_name="mono training"
+	preamble=False
 	workout(workout_name, fingers,sets,set_rest,active_interval,rest_interval)
 
 
